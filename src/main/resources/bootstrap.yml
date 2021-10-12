@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: servicio-usb-bienestar
+  profiles:
+    active: ${JENKINS:dev}
+  cloud:
+    config:
+#      uri: ${CONFIG-SERVER:http://localhost:8888}
+      uri: ${CONFIG-SERVER:http://10.0.30.20:8888}
+      name: ${spring.application.name}, messages
+      fail-fast: false
+      username: UnisimonBolivar
+      password: Un151M0n.B0l1v4R

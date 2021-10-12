@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  servicio-usb-bienestar:
+    container_name: servicio-usb-bienestar
+    image: image-servicio-usb-bienestar:$BUILD_NUMBER
+    build:
+      context: ../.
+    environment:
+      - JAVA_OPTS=
+        -DCONFIG-SERVER=http://config-server:8888
+        -DJENKINS=$USB_PROFILE_ACTIVE
+        -DEUREKA_SERVER=http://eureka-server:8761/eureka
+    restart: always
+    volumes:
+      - /home/administrador/usb-file-server/servicio-usb-bienestar/:/servicio-usb-bienestar-logs/
+    networks:
+      - usb-aci_net_CICD
+      - jenkins_USBSpringCloud
+networks:
+  usb-aci_net_CICD:
+    external: true
+  jenkins_USBSpringCloud:
+    external: true

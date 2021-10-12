@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  servicio-usb-base:
+    container_name: PRESTAMO71
+    hostname:  PRESTAMO71
+    domainname: unisimon.edu
+#    ports:
+#      - "50000-50100"
+    image: image-servicio-usb-bienestar:1
+    build:
+      context: ../.
+    environment:
+      - JAVA_OPTS=
+        -DCONFIG-SERVER=http://10.0.30.20:8888
+        -DJENKINS=dev
+        -DEUREKA_SERVER=http://10.0.30.20:8761/eureka
+    restart: always
+#    volumes:
+#      - /home/administrador/usb-file-server/servicio-usb-bienestar/:/servicio-usb-bienestar-logs/
+    networks:
+      - local
+#      - jenkins_USBSpringCloud
+networks:
+  local:
+#  usb-aci_net_CICD:
+#    external: true
+#  jenkins_USBSpringCloud:
+#    external: true

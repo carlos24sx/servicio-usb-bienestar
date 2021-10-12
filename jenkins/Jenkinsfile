@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    environment {
+      	USB_PROFILE_ACTIVE = credentials('usb-profile-active')
+      	USB_GIT_CONFIG_SERVER_PROPERTIES = credentials('usb-git-config-server-properties')  
+    }
+    stages {
+        stage('Build Compile') {
+           steps {
+	           sh './jenkins/build/mvn.sh mvn -B -DskipTests clean package'
+            }
+        }
+        stage('Build Docker Images') {
+            steps {
+              sh './jenkins/build/build.sh'
+            }
+        }
+        stage('Build Deploy Docker') {
+            steps {
+              sh './jenkins/deploy/deploy.sh'
+            }
+        }
+    }
+}

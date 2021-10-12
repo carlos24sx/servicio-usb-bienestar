@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="APP_NAME" value="servicio-usb-base"/>
+    <property name="HOME_LOG_PATH" value="./servicio-usb-base-logs"/>
+    <property name="PATTERN_CONSOLE" value="[%d{yyyy-MM-dd HH:mm:ss}] %highlight([%-4level]) [%thread] %cyan([%logger{36}]) - %msg%n"/>
+    <property name="PATTERN_ROLLING_FILE" value="%d %p %c{1.} [%t] %m%n"/>
+    <property name="TOTAL_FILE_SIZE" value="10GB"/>
+    <property name="MAX_FILE_SIZE" value="10MB"/>
+    <property name="MAX_DAY_KEEP" value="60"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                ${PATTERN_CONSOLE}
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${HOME_LOG_PATH}/${APP_NAME}-logger.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${PATTERN_ROLLING_FILE}</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${HOME_LOG_PATH}/archived/${APP_NAME}-logger-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <!-- total size of all archive files, if total size > TOTAL_FILE_SIZE, it will delete old archived file -->
+            <totalSizeCap>${TOTAL_FILE_SIZE}</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>${MAX_DAY_KEEP}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="SevereRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${HOME_LOG_PATH}/${APP_NAME}-severe-logger.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${PATTERN_ROLLING_FILE}</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${HOME_LOG_PATH}/archived/${APP_NAME}-severe-logger-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <!-- total size of all archive files, if total size > TOTAL_FILE_SIZE, it will delete old archived file -->
+            <totalSizeCap>${TOTAL_FILE_SIZE}</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>${MAX_DAY_KEEP}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="WARN">
+        <appender-ref ref="Console"/>
+    </root>
+
+    <!-- LOG "co.edu.unisimon.base.*" at TRACE level -->
+    <logger name="co.edu.unisimon.base" level="TRACE" additivity="false">
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="SevereRollingFile"/>
+        <appender-ref ref="Console"/>
+    </logger>
+
+    <!-- LOG "org.springframework" at INFO level -->
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="RollingFile"/>
+    </logger>
+
+</configuration>
+
